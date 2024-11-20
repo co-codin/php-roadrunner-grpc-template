@@ -6,6 +6,7 @@ use GRPC\Pinger\PingerInterface;
 use Spiral\RoadRunner\GRPC;
 use GRPC\Pinger\PingRequest;
 use GRPC\Pinger\PingResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class Pinger implements PingerInterface
 {
@@ -16,7 +17,7 @@ final class Pinger implements PingerInterface
 
     public function ping(GRPC\ContextInterface $ctx, PingRequest $in): PingResponse
     {
-        $statusCode = $this->httpClient->get($in->getUrl())->getStatusCode();
+        $statusCode = $this->httpClient->request('GET', $in->getUrl())->getStatusCode();
 
         return new PingResponse([
             'status_code' => $statusCode
